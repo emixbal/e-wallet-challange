@@ -18,6 +18,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'Login'])->name('api.login');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/deposit', [WalletController::class, 'deposit']);
     Route::post('/withdraw', [WalletController::class, 'withdraw']);
@@ -26,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
 // for dummy third party payment gateway
 Route::group(['prefix' => 'iqbalpay', 'middleware' => ['name_token']], function () {
     Route::post('/deposit', [App\Http\Controllers\IqbalPayController::class, 'deposit'])->name('iqbalpay.deposit');
+    Route::post('/withdraw', [App\Http\Controllers\IqbalPayController::class, 'withdraw'])->name('iqbalpay.withdraw');
 });
 
 // for dummy third party payment gateway
