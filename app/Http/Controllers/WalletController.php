@@ -7,23 +7,24 @@ use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
 {
     private $paymentService;
+    private $userId;
 
-    public function __construct(PaymentService $paymentService)
+    public function __construct(PaymentService $paymentService, Request $request)
     {
         $this->paymentService = $paymentService;
+        $this->userId = $request->userLoggedIn['user_id'];
     }
 
     public function deposit(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'amount' => ['required', 'numeric', 'min:0'],
+            'amount' => ['required', 'numeric', 'min:1000'],
         ]);
 
         if ($validator->fails()) {
@@ -53,7 +54,7 @@ class WalletController extends Controller
 
             if ($response['status'] == 1) {
                 // Update wallet
-                $wallet = Wallet::firstOrCreate(['user_id' => Auth::id()]);
+                $wallet = Wallet::firstOrCreate(['user_id' => $this->userId]);
                 $wallet->balance += $amount;
                 $wallet->save();
             }
@@ -63,7 +64,7 @@ class WalletController extends Controller
         }
 
         DB::commit();
-        dispatch(new UpdateWalletJob(Auth::id(), $amount));
+        dispatch(new UpdateWalletJob($this->userId, $amount));
         return response()->json($transaction);
     }
 
@@ -86,7 +87,7 @@ class WalletController extends Controller
         DB::beginTransaction();
         try {
             // Ensure the user has enough balance
-            $wallet = Wallet::where('user_id', Auth::id())->lockForUpdate()->first();
+            $wallet = Wallet::where('user_id', $this->userId)->lockForUpdate()->first();
             if ($wallet->balance < $amount) {
                 throw new \Exception('Insufficient balance');
             }
@@ -120,16 +121,13 @@ class WalletController extends Controller
 
     public function walletDetailByUser(Request $request)
     {
-        // Retrieve the user ID from the authenticated request
-        $userId = $request->userLoggedIn['user_id'];
-
         // Fetch the associated wallet details from the database
-        $wallet = Wallet::where('user_id', $userId)->first();
+        $wallet = Wallet::where('user_id', $this->userId)->first();
 
         // If the user doesn't have a wallet record, create a new one with a balance of 0
         if (!$wallet) {
             $wallet = new Wallet();
-            $wallet->user_id = $userId;
+            $wallet->user_id = $this->userId;
             $wallet->balance = (float) 0.00;
         }
 
@@ -137,7 +135,7 @@ class WalletController extends Controller
             "status" => "ok",
             "message" => "success",
             "data" => (object) [
-                'user_id' => $userId,
+                'user_id' => $this->userId,
                 'wallet' => $wallet,
             ],
         ], 200);
