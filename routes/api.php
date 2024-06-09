@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WalletController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +21,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'Login'])->name('api.login');
 
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['if_auth'])->group(function () {
+//     Route::post('/deposit', [WalletController::class, 'deposit']);
+//     Route::post('/withdraw', [WalletController::class, 'withdraw']);
+//     Route::post('/wallet-detail', [WalletController::class, 'walletDetailByUser']);
+// });
+
+Route::group(['middleware' => ['if_auth']], function () {
     Route::post('/deposit', [WalletController::class, 'deposit']);
     Route::post('/withdraw', [WalletController::class, 'withdraw']);
+    Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser']);
 });
+
+
 
 // for dummy third party payment gateway
 Route::group(['prefix' => 'iqbalpay', 'middleware' => ['name_token']], function () {
