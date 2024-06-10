@@ -7,6 +7,14 @@ use Illuminate\Support\Facades\Validator;
 
 class IqbalPayController extends Controller
 {
+    public function debug(Request $request)
+    {
+        return response()->json((object) [
+            "order_id" => 11111,
+            "amount" => 10000.00,
+            "status" => 1,
+        ], 200);
+    }
     /**
      * Dummy deposit, acts as payment gateway
      */

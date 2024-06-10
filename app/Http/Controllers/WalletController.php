@@ -22,6 +22,7 @@ class WalletController extends Controller
     public function deposit(Request $request)
     {
         $userId = $request->userLoggedIn['user_id'];
+
         $validator = Validator::make($request->all(), [
             'amount' => ['required', 'numeric', 'min:1000'],
         ]);
@@ -31,7 +32,7 @@ class WalletController extends Controller
         }
 
         $orderId = uniqid();
-        $amount = $request->input('amount');
+        $amount = $request->amount;
         $timestamp = now();
 
         DB::beginTransaction();
@@ -41,6 +42,7 @@ class WalletController extends Controller
                 'order_id' => $orderId,
                 'amount' => $amount,
                 'timestamp' => $timestamp,
+                'user_id' => $userId,
                 'status' => 0, // Pending
             ]);
 
@@ -100,6 +102,7 @@ class WalletController extends Controller
                 'order_id' => $orderId,
                 'amount' => $amount,
                 'timestamp' => $timestamp,
+                'user_id' => $userId,
                 'status' => $response['status'],
             ]);
 
