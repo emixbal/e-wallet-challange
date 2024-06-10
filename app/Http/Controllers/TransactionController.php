@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
 
 class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $transactions = Transaction::join('users', 'transactions.user_id', '=', 'users.id')
+            ->select('transactions.*', 'users.name as user_name') // Assuming 'name' is the user's name field
+            ->get();
+
+        return response()->json([
+            "status" => "ok",
+            "message" => "success",
+            "data" => $transactions,
+        ], 200);
     }
 
     /**

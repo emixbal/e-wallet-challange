@@ -32,6 +32,7 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
+                    <th>User Name</th>
                     <th>Amount</th>
                     <th>Status</th>
                     <th>Timestamp</th>
@@ -67,6 +68,7 @@
                             const row = `
                                 <tr>
                                     <td>${transaction.order_id}</td>
+                                    <td>${transaction.user_name}</td>
                                     <td>${transaction.amount.toFixed(2)}</td>
                                     <td>${status}</td>
                                     <td>${transaction.timestamp}</td>
@@ -75,8 +77,16 @@
                             transactionsTableBody.append(row);
                         });
                     },
-                    error: function(error) {
-                        console.error('Error fetching transactions:', error);
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 403) {
+                            // Clear access token from local storage
+                            localStorage.removeItem('access_token');
+                            // Redirect to home page or login page
+                            window.location.href =
+                            "{{ route('login') }}"; // Ganti dengan rute yang benar
+                        } else {
+                            console.error('Error fetching transactions:', error);
+                        }
                     }
                 });
             }
