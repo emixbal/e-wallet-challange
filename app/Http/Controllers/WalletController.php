@@ -52,6 +52,7 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
+                'is_success' => false,
                 'status' => 1, // Mark as deposit transaction
             ]);
 
@@ -98,6 +99,7 @@ class WalletController extends Controller
             ], 422);
         }
 
+        $orderId = uniqid();
         $amount = $request->amount;
         $bank = $request->bank;
         $account = $request->account;
@@ -105,17 +107,26 @@ class WalletController extends Controller
 
         DB::beginTransaction();
         try {
-            // Dispatch WithdrawJob
-            dispatch(new WithdrawJob($userId, $amount));
-
             // save transaction
             $transaction = Transaction::create([
-                'order_id' => uniqid(),
+                'order_id' => $orderId,
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
+                'is_success' => false,
                 'status' => 2, // Mark as withdrawal transaction
             ]);
+
+            // Call third-party service
+            $response = $this->paymentService->withdraw($orderId, $amount, $timestamp, $bank, $account);
+
+            if ($response['status'] == 1) {
+                $transaction->is_success = true;
+                $transaction->save();
+
+                // Dispatch WithdrawJob
+                dispatch(new WithdrawJob($userId, $amount));
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [

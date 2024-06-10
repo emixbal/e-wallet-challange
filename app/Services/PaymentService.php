@@ -53,7 +53,7 @@ class PaymentService
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . base64_encode($this->token),
             'Content-Type' => 'application/json',
-        ])->post($this->url . '/deposit', $data);
+        ])->post($this->url . '/withdraw', $data);
 
         $responseData = json_decode($response->getBody(), true);
 
