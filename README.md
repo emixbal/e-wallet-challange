@@ -131,19 +131,11 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
       ```json
       {
           "status": "ok",
-          "message": "ok",
+          "message": "success",
           "data": {
               "user_id": "user_id",
               "wallet": { "wallet_details" }
           }
-      }
-      ```
-    - Error:
-      ```json
-      {
-          "status": "500",
-          "message": "Internal Server Error",
-          "error": "Internal server error"
       }
       ```
 
@@ -158,14 +150,6 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
           "status": "ok",
           "message": "success",
           "data": [ { "transaction_objects" } ]
-      }
-      ```
-    - Error:
-      ```json
-      {
-          "status": "500",
-          "message": "Internal Server Error",
-          "error": "Internal server error"
       }
       ```
 
