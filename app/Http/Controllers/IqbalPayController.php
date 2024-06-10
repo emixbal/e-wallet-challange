@@ -29,10 +29,11 @@ class IqbalPayController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 "message" => $validator->messages(),
+                "status" => 2,
             ], 422);
         }
 
-        $formattedAmount = number_format((float)$request->amount, 2, '.', '');
+        $formattedAmount = number_format((float) $request->amount, 2, '.', '');
         $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
 
         return response()->json((object) [
@@ -58,10 +59,11 @@ class IqbalPayController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 "message" => $validator->messages(),
+                "status" => 2,
             ], 422);
         }
 
-        $formattedAmount = number_format((float)$request->amount, 2, '.', '');
+        $formattedAmount = number_format((float) $request->amount, 2, '.', '');
         $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
 
         return response()->json((object) [
