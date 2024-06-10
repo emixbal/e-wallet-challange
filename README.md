@@ -58,6 +58,7 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
     - Success:
       ```json
       {
+          "error": null,
           "status": "ok",
           "message": "ok"
       }
@@ -83,6 +84,7 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
     - Success:
       ```json
       {
+          "error": null,
           "status": "ok",
           "message": "success"
       }
@@ -106,6 +108,7 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
     - Success:
       ```json
       {
+          "error": null,
           "status": "ok",
           "message": "success"
       }
