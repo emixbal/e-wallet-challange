@@ -22,9 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login_process'])->name('api.login');
 
 Route::group(['middleware' => ['if_auth']], function () {
-    Route::post('/deposit', [WalletController::class, 'deposit']);
-    Route::post('/withdraw', [WalletController::class, 'withdraw']);
-    Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser']);
+    Route::post('/deposit', [WalletController::class, 'deposit'])->name('waller.deposit');
+    Route::post('/withdraw', [WalletController::class, 'withdraw'])->name('waller.withdraw');
+    Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser'])->name('waller.wallet_detail');
+    Route::get('/transactions', [WalletController::class, 'listTransactions'])->name('waller.transaction_list');
 });
 
 // for dummy third party payment gateway

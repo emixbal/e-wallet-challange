@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('order_id')->unique();
             $table->double('amount', 8, 2);
             $table->timestamp('timestamp');
@@ -22,5 +23,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('transactions');
     }
-
 };
