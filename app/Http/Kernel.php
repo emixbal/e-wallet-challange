@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'if_auth' => \App\Http\Middleware\IsAuth::class,
+        'if_admin' => \App\Http\Middleware\IsAdmin::class,
 
         'name_token' => \App\Http\Middleware\ensureToken::class, //dummy payment gateway
     ];

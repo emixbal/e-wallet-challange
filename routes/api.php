@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,10 @@ Route::group(['middleware' => ['if_auth']], function () {
     Route::post('/payment', [WalletController::class, 'payment'])->name('wallet.payment');
     Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser'])->name('wallet.wallet_detail');
     Route::get('/transactions', [WalletController::class, 'listTransactions'])->name('wallet.transaction_list');
+});
+
+Route::group(['prefix'=>'admin-transactions','middleware' => ['if_auth', 'if_admin']], function () {
+    Route::get('/', [TransactionController::class, 'index'])->name('transactions.list');
 });
 
 // for dummy third party payment gateway

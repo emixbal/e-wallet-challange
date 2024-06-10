@@ -49,6 +49,7 @@ class IsAuth
             'userLoggedIn' => [
                 'user_id' => $decoded->user_id,
                 'email' => $decoded->email,
+                'role' =>  $decoded->role,
             ],
         ];
 

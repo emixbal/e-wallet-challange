@@ -33,7 +33,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->with('role')->first();
 
         if (!$user) {
             return response()->json([
@@ -59,6 +59,7 @@ class AuthController extends Controller
         $payload = [
             'email' => $user->email,
             'user_id' => $user->id,
+            'role' => $user->role->name,
             'iat' => $now,
         ];
 
