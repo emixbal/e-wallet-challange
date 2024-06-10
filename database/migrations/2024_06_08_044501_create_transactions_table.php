@@ -14,7 +14,8 @@ return new class extends Migration
             $table->string('order_id')->unique();
             $table->double('amount', 8, 2);
             $table->timestamp('timestamp');
-            $table->integer('status'); // 1: Success, 2: Failed
+            $table->boolean('is_success')->default(false);
+            $table->integer('status'); //1 topup, 2 withdraw, 3 payment
             $table->timestamps();
         });
     }
