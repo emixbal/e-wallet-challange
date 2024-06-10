@@ -127,6 +127,7 @@ $(document).ready(function () {
                     alert("Ulangi beberapa saat lagi")
                     $('#topUpModal').modal('hide');
                 }
+                alert("Sukses...")
                 location.reload();
                 return;
             },
@@ -188,6 +189,7 @@ $(document).ready(function () {
                     alert("Ulangi beberapa saat lagi")
                     $('#topUpModal').modal('hide');
                 }
+                alert("Sukses...")
                 location.reload();
                 return;
             },
@@ -237,6 +239,7 @@ $(document).ready(function () {
                     alert("Ulangi beberapa saat lagi")
                     $('#payModal').modal('hide');
                 }
+                alert("Sukses...")
                 location.reload();
                 return;
             },
