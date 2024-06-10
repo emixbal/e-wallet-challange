@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\PaymentJob;
 use App\Jobs\TopupWalletJob;
 use App\Jobs\WithdrawJob;
-use App\Jobs\PaymentJob;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\PaymentService;
@@ -45,9 +45,7 @@ class WalletController extends Controller
         try {
             // Call third-party service
             $response = $this->paymentService->deposit($orderId, $amount, $timestamp);
-            if ($response['status'] != 1) {
-                throw new \InvalidArgumentException('Cant access payment service');
-            }
+
             // Save transaction
             $transaction = Transaction::create([
                 'order_id' => $orderId,
@@ -57,8 +55,14 @@ class WalletController extends Controller
                 'status' => 1, // Mark as deposit transaction
             ]);
 
+            if ($response['status'] == 1) {
+                $transaction->is_success = true;
+                $transaction->save();
+
+                dispatch(new TopupWalletJob($userId, $amount));
+            }
+
             // Update wallet
-            dispatch(new TopupWalletJob($userId, $amount));
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [
