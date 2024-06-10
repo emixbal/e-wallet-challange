@@ -210,7 +210,6 @@ $(document).ready(function () {
     })
 
     $("#btn_payment").on("click", function () {
-        alert()
         var payment_amount = $("#payment_amount").val()
 
         if (payment_amount == "") {
