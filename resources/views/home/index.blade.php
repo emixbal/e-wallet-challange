@@ -30,6 +30,10 @@
             font-size: 1.5rem;
             margin-left: 10px;
         }
+
+        .bg-light-gray {
+            background-color: #f7c1c1 !important;
+        }
     </style>
 @endsection
 

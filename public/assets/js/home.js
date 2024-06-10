@@ -71,8 +71,14 @@ $(document).ready(function () {
                                 statusDescription = 'Unknown';
                         }
 
+                        // Determine success status text
+                        var successStatusText = transaction.is_success ? 'Success' : 'Failed';
+
+                        // Determine background color based on success status
+                        var backgroundColorClass = transaction.is_success ? '' : 'bg-light-gray';
+
                         var transactionHTML = `
-                            <div class="list-group-item transaction">
+                            <div class="list-group-item transaction ${backgroundColorClass}">
                                 <div class="d-flex justify-content-between m-1">
                                     <div>
                                         <strong>${transaction.order_id}</strong>
@@ -80,6 +86,9 @@ $(document).ready(function () {
                                         <small>${statusDescription}</small>
                                     </div>
                                     <div class="${transactionClass}">${formatRupiah(transaction.amount)}</div>
+                                </div>
+                                <div class="m-1">
+                                    <small class="text-muted">Status: ${successStatusText}</small>
                                 </div>
                             </div>
                         `;
@@ -95,6 +104,9 @@ $(document).ready(function () {
                 $('#transactions').html('<div class="text-center mt-5">Error occurred while fetching transactions</div>');
             }
         });
+
+
+
 
     }, 1000); // Delay 1000ms for Ajax request
 
