@@ -52,18 +52,14 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
-                'status' => 0, // Pending
             ]);
 
             // Update transaction status
-            $transaction->status = $response['status'];
+            $transaction->status = 1; //top up
             $transaction->save();
 
             // Update wallet
             dispatch(new UpdateWalletJob($userId, $amount));
-            // $wallet = Wallet::firstOrCreate(['user_id' => $userId]);
-            // $wallet->balance += $amount;
-            // $wallet->save();
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [
@@ -86,7 +82,8 @@ class WalletController extends Controller
     {
         $userId = $request->userLoggedIn['user_id'];
         $validator = Validator::make($request->all(), [
-            'amount' => ['required', 'numeric', 'min:0'],
+            'amount' => ['required', 'numeric', 'min:10000'],
+            'account' => ['required', 'numeric', 'min:0'],
             'bank' => ['required', 'string', 'in:ABC,DEF,FGH'],
         ]);
 
@@ -99,8 +96,9 @@ class WalletController extends Controller
         }
 
         $orderId = uniqid();
-        $amount = $request->input('amount');
-        $bank = $request->input('bank');
+        $amount = $request->amount;
+        $bank = $request->bank;
+        $account = $request->account;
         $timestamp = now()->format('Y-m-d H:i:s.u');
 
         DB::beginTransaction();
@@ -112,7 +110,10 @@ class WalletController extends Controller
             }
 
             // Call third-party service
-            $response = $this->paymentService->withdraw($orderId, $amount, $timestamp, $bank);
+            $response = $this->paymentService->withdraw($orderId, $amount, $timestamp, $bank, $account);
+            if ($response['status'] != 1) {
+                throw new \InvalidArgumentException('Cant access payment service');
+            }
 
             // Save transaction
             $transaction = Transaction::create([
@@ -120,16 +121,15 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
-                'status' => $response['status'],
             ]);
 
-            if ($response['status'] == 1) {
-                // Update wallet
-                $wallet->balance -= $amount;
-                $wallet->save();
-            } else {
-                throw new \Exception('Withdraw failed');
-            }
+            // Update transaction status
+            $transaction->status = 2; //withdraw
+            $transaction->save();
+
+            $wallet->balance -= $amount;
+            $wallet->save();
+
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [

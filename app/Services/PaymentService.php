@@ -34,7 +34,7 @@ class PaymentService
         return $responseData;
     }
 
-    public function withdraw($orderId, $amount, $timestamp, $bank)
+    public function withdraw($orderId, $amount, $timestamp, $bank, $account)
     {
         // Validate bank parameter
         $allowedBanks = ['ABC', 'DEF', 'FGH'];
@@ -46,6 +46,7 @@ class PaymentService
             'order_id' => $orderId,
             'amount' => $amount,
             'bank' => $bank,
+            'account' => $account,
             'timestamp' => $timestamp,
         ];
 
