@@ -72,7 +72,7 @@ class WalletController extends Controller
         DB::commit();
         return response()->json((object) [
             "error" => null,
-            "message" => "ok",
+            "message" => "success",
             "status" => "ok",
         ]);
     }
@@ -192,7 +192,7 @@ class WalletController extends Controller
 
         return response()->json([
             "status" => "ok",
-            "message" => "ok",
+            "message" => "success",
             "data" => (object) [
                 'user_id' => $userId,
                 'wallet' => $wallet,
