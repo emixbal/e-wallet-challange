@@ -37,7 +37,9 @@ Oleh Muhammad Iqbal
     ```
     php artisan serve
     ```
+    
     kunjungi `http://localhost:8000` for user page
+
     kunjungi `http://localhost:8000/transaction`  for admin page
 
 10. Jalankan Job queue
