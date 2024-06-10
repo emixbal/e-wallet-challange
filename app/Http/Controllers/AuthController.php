@@ -4,15 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Ramsey\Uuid\Uuid;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
+    {
+        $pass = [
+            "page" => [
+                "parent_title" => "Login",
+                "title" => "Login",
+            ],
+            "data" => [],
+        ];
+
+        return view("login/login_form", $pass);
+    }
+
+    public function login_process(Request $request)
     {
         if (!$request->email || !$request->password) {
             return response()->json([

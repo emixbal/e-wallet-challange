@@ -15,5 +15,9 @@ use App\Http\Controllers\HomeController;
 */
 
 Route::group(['prefix' => '/'], function () {
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+});
+
+Route::group(['prefix' => 'login'], function () {
+    Route::get('/', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
 });

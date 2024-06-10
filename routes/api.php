@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'Login'])->name('api.login');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login_process'])->name('api.login');
 
 Route::group(['middleware' => ['if_auth']], function () {
     Route::post('/deposit', [WalletController::class, 'deposit']);
