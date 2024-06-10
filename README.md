@@ -46,7 +46,11 @@ Oleh Muhammad Iqbal
     ```
 
 11. Untuk login gunakan user di UserSeeder
+    //user
     email: user@email.com
+    password: aaaaaaaa
+    //ad,in
+    email: admin@email.com
     password: aaaaaaaa
 
 
