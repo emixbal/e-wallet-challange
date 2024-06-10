@@ -24,6 +24,7 @@ Route::post('/login', [App\Http\Controllers\AuthController::class, 'login_proces
 Route::group(['middleware' => ['if_auth']], function () {
     Route::post('/deposit', [WalletController::class, 'deposit'])->name('wallet.deposit');
     Route::post('/withdraw', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
+    Route::post('/payment', [WalletController::class, 'payment'])->name('wallet.payment');
     Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser'])->name('wallet.wallet_detail');
     Route::get('/transactions', [WalletController::class, 'listTransactions'])->name('wallet.transaction_list');
 });

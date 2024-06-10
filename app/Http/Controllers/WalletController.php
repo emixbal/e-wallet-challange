@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\UpdateWalletJob;
 use App\Jobs\WithdrawJob;
+use App\Jobs\PaymentJob;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\PaymentService;
@@ -124,7 +125,55 @@ class WalletController extends Controller
         return response()->json((object) [
             "error" => null,
             "status" => "ok",
-            "message" => "Withdrawal request submitted",
+            "message" => "success",
+        ]);
+    }
+
+    public function payment(Request $request)
+    {
+        $userId = $request->userLoggedIn['user_id'];
+        $validator = Validator::make($request->all(), [
+            'amount' => ['required', 'numeric', 'min:1000'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => $validator->messages(),
+                "message" => "Something went wrong",
+                "status" => "nok",
+            ], 422);
+        }
+
+        $amount = $request->amount;
+        $timestamp = now()->format('Y-m-d H:i:s.u');
+
+        DB::beginTransaction();
+        try {
+            // dispatch PaymentJob
+            dispatch(new PaymentJob($userId, $amount));
+
+            // Save transaction
+            $transaction = Transaction::create([
+                'order_id' => uniqid(),
+                'amount' => $amount,
+                'timestamp' => $timestamp,
+                'user_id' => $userId,
+                'status' => 3, // Mark as payment transaction
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json((object) [
+                'error' => $e->getMessage(),
+                "message" => "Something went wrong",
+                "status" => "nok",
+            ], 200);
+        }
+
+        DB::commit();
+        return response()->json((object) [
+            "error" => null,
+            "status" => "ok",
+            "message" => "success",
         ]);
     }
 
