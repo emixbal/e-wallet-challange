@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\UpdateWalletJob;
+use App\Jobs\TopupWalletJob;
 use App\Jobs\WithdrawJob;
 use App\Jobs\PaymentJob;
 use App\Models\Transaction;
@@ -58,7 +58,7 @@ class WalletController extends Controller
             ]);
 
             // Update wallet
-            dispatch(new UpdateWalletJob($userId, $amount));
+            dispatch(new TopupWalletJob($userId, $amount));
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [

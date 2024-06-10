@@ -26,7 +26,7 @@ class WithdrawJob implements ShouldQueue
     public function handle()
     {
         DB::transaction(function () {
-            $wallet = Wallet::firstOrCreate(['user_id' => $this->userId]);
+            $wallet = Wallet::where(['user_id' => $this->userId])->first();
             $wallet->balance -= $this->amount;
 
             if ($wallet->balance < 0) {
