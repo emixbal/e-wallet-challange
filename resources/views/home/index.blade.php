@@ -37,9 +37,7 @@
     <div class="text-center mt-5">
         <h1>{{ $page['parent_title'] }}</h1>
     </div>
-    <div class="text-center wallet-balance">
-        $1,250.00
-    </div>
+    <div class="text-center wallet-balance" id="wallet_balance"></div>
     <div class="list-group mt-4" id="transactions"></div>
 
     <!-- Pay Button -->
