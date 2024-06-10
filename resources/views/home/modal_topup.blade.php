@@ -9,26 +9,23 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="topup-amount">Amount</label>
-                        <input type="number" class="form-control" id="topup-amount" placeholder="Enter amount">
-                    </div>
-                    <div class="form-group">
-                        <label for="payment-method">Payment Method</label>
-                        <select class="form-control" id="payment-method">
-                            <option>Bank Transfer</option>
-                            <option>Credit Card</option>
-                            <option>PayPal</option>
-                        </select>
-                    </div>
-                </form>
+                <div class="form-group">
+                    <label for="topup-amount">Amount</label>
+                    <input type="number" class="form-control" id="topup_amount" placeholder="Enter amount">
+                </div>
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <select class="form-control" id="payment-method">
+                        <option>Bank Transfer</option>
+                        <option>Credit Card</option>
+                        <option>PayPal</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success">Top Up</button>
+                <button type="button" class="btn btn-success" id="btn_top_up">Top Up</button>
             </div>
         </div>
     </div>
 </div>
-

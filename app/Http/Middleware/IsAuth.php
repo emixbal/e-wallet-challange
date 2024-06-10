@@ -46,10 +46,10 @@ class IsAuth
         }
 
         $send_to_controller = [
-            'userLoggedIn' => array(
+            'userLoggedIn' => [
                 'user_id' => $decoded->user_id,
                 'email' => $decoded->email,
-            ),
+            ],
         ];
 
         $request->mergeIfMissing($send_to_controller);

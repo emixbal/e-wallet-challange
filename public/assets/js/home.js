@@ -76,6 +76,48 @@ $(document).ready(function () {
             }
         });
     }, 1000); // Delay 1000ms for Ajax request
+
+
+    $("#btn_top_up").on("click", function () {
+        var topup_amount = $("#topup_amount").val()
+
+        if (topup_amount=="") {
+            alert("Amount required !")
+            return
+        }
+
+        if (isNaN(topup_amount)) {
+            alert("Amount top-up harus berupa angka!");
+            return; // Keluar dari fungsi jika tidak valid
+        }
+
+        $.ajax({
+            headers: {
+                'Authorization': accessToken,
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: `${base_app_url}/deposit`,
+            type: "POST",
+            data: {
+                amount: topup_amount,
+            },
+            success: async function (response, textStatus, xhr) {
+                location.reload();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 422) {
+                    var errorMessage = jqXHR.responseJSON?.message || "Validation error occurred.";
+                    alert(errorMessage);
+                    return
+                } else {
+                    console.log("An error occurred");
+                    console.log(jqXHR, textStatus, errorThrown);
+                    return;
+                }
+            }
+        });
+
+    })
 });
 
 // Function to format number to Rupiah format
