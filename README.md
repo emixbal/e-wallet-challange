@@ -159,3 +159,6 @@ This route group is protected by the 'if_auth' middleware, ensuring that only au
       ```
 
 
+##screenshot
+![all pods](https://github.com/emixbal/e-wallet-challenge/blob/main/ss/1.png)
+![all pods](https://github.com/emixbal/e-wallet-challenge/blob/main/ss/2.png)
