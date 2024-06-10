@@ -11,21 +11,17 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label for="recipient">Recipient</label>
-                        <input type="text" class="form-control" id="recipient" placeholder="Enter recipient">
+                        <label for="payment_amount">Amount</label>
+                        <input type="number" class="form-control" id="payment_amount" placeholder="Enter amount">
                     </div>
                     <div class="form-group">
-                        <label for="amount">Amount</label>
-                        <input type="number" class="form-control" id="amount" placeholder="Enter amount">
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" class="form-control" id="description" placeholder="Enter description">
+                        <label for="payment_description">Description</label>
+                        <input type="text" class="form-control" id="payment_description" placeholder="Enter description">
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn_payment">Close</button>
                 <button type="button" class="btn btn-primary">Pay</button>
             </div>
         </div>

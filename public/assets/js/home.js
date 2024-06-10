@@ -208,6 +208,57 @@ $(document).ready(function () {
             }
         });
     })
+
+    $("#btn_payment").on("click", function () {
+        alert()
+        var payment_amount = $("#payment_amount").val()
+
+        if (payment_amount == "") {
+            alert("Amount required !")
+            return
+        }
+
+        if (isNaN(payment_amount)) {
+            alert("Amount withdraw harus berupa angka!");
+            return;
+        }
+
+        $.ajax({
+            headers: {
+                'Authorization': accessToken,
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: `${base_app_url}/payment`,
+            type: "POST",
+            data: {
+                amount: payment_amount,
+            },
+            success: async function (response, textStatus, xhr) {
+                if (response.status == "nok") {
+                    alert("Ulangi beberapa saat lagi")
+                    $('#payModal').modal('hide');
+                }
+                location.reload();
+                return;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status === 422) {
+                    var errorMessage = jqXHR.responseJSON?.message || "Validation error occurred.";
+                    alert(errorMessage);
+                    return
+                }
+
+                console.log("An error occurred");
+                console.log(jqXHR, textStatus, errorThrown);
+                return;
+            },
+            finally: function () {
+                alert("Ulangi beberapa saat lagi");
+                return;
+            }
+        });
+    })
+
 });
 
 // Function to format number to Rupiah format
