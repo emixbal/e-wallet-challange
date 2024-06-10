@@ -21,8 +21,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btn_payment">Close</button>
-                <button type="button" class="btn btn-primary">Pay</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btn_payment">Pay</button>
             </div>
         </div>
     </div>
