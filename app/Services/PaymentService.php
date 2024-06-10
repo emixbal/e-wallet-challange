@@ -4,7 +4,6 @@ namespace App\Services;
 
 // use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
@@ -21,13 +20,13 @@ class PaymentService
 
     public function deposit($orderId, $amount, $timestamp)
     {
-        Log::info('Attempting to deposit to external endpoint.', [
-            'order_id' => $orderId,
-            'amount' => $amount,
-            'timestamp' => $timestamp,
-            'url' => $this->url . '/deposit',
-            'token' => 'Bearer ' . base64_encode($this->token),
-        ]);
+        // Log::info('Attempting to deposit to external endpoint.', [
+        //     'order_id' => $orderId,
+        //     'amount' => $amount,
+        //     'timestamp' => $timestamp,
+        //     'url' => $this->url . '/deposit',
+        //     'token' => 'Bearer ' . base64_encode($this->token),
+        // ]);
 
         // $response = $this->client->request('GET', 'http://localhost/dprd-payroll/api/json', [
         //     // 'headers' => [
@@ -43,7 +42,7 @@ class PaymentService
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . base64_encode($this->token),
             'Content-Type' => 'application/json',
-        ])->post('http://localhost/dprd-payroll/api/json', [
+        ])->post("http://localhost/payment_app/api/iqbalpay" . '/deposit', [
             'order_id' => $orderId,
             'amount' => $amount,
             'timestamp' => $timestamp,
@@ -61,7 +60,7 @@ class PaymentService
         //     ],
         // ]);
 
-        Log::info($response);
+        // Log::info($response);
 
         $responseData = json_decode($response->getBody(), true);
 

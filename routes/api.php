@@ -30,7 +30,7 @@ Route::group(['middleware' => ['if_auth']], function () {
 
 // for dummy third party payment gateway
 Route::group(['prefix' => 'iqbalpay', 'middleware' => ['name_token']], function () {
-    Route::get('/deposit', [App\Http\Controllers\IqbalPayController::class, 'debug'])->name('iqbalpay.deposit');
+    // Route::get('/deposit', [App\Http\Controllers\IqbalPayController::class, 'debug'])->name('iqbalpay.deposit');
     Route::post('/deposit', [App\Http\Controllers\IqbalPayController::class, 'deposit'])->name('iqbalpay.deposit');
     Route::post('/withdraw', [App\Http\Controllers\IqbalPayController::class, 'withdraw'])->name('iqbalpay.withdraw');
 });
