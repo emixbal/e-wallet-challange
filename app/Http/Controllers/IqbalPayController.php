@@ -34,7 +34,8 @@ class IqbalPayController extends Controller
         }
 
         $formattedAmount = number_format((float) $request->amount, 2, '.', '');
-        $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
+        // $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
+        $status = 1;
 
         return response()->json((object) [
             "order_id" => $request->order_id,
@@ -64,7 +65,8 @@ class IqbalPayController extends Controller
         }
 
         $formattedAmount = number_format((float) $request->amount, 2, '.', '');
-        $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
+        // $status = rand(1, 100) <= 90 ? 1 : 2; // sometime success, sometime fail
+        $status = 1;
 
         return response()->json((object) [
             "order_id" => $request->order_id,

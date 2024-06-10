@@ -22,15 +22,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login_process'])->name('api.login');
 
 Route::group(['middleware' => ['if_auth']], function () {
-    Route::post('/deposit', [WalletController::class, 'deposit'])->name('waller.deposit');
-    Route::post('/withdraw', [WalletController::class, 'withdraw'])->name('waller.withdraw');
-    Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser'])->name('waller.wallet_detail');
-    Route::get('/transactions', [WalletController::class, 'listTransactions'])->name('waller.transaction_list');
+    Route::post('/deposit', [WalletController::class, 'deposit'])->name('wallet.deposit');
+    Route::post('/withdraw', [WalletController::class, 'withdraw'])->name('wallet.withdraw');
+    Route::get('/wallet-detail', [WalletController::class, 'walletDetailByUser'])->name('wallet.wallet_detail');
+    Route::get('/transactions', [WalletController::class, 'listTransactions'])->name('wallet.transaction_list');
 });
 
 // for dummy third party payment gateway
 Route::group(['prefix' => 'iqbalpay', 'middleware' => ['name_token']], function () {
-    // Route::get('/deposit', [App\Http\Controllers\IqbalPayController::class, 'debug'])->name('iqbalpay.deposit');
+    Route::get('/deposit', [App\Http\Controllers\IqbalPayController::class, 'debug'])->name('iqbalpay.deposit');
     Route::post('/deposit', [App\Http\Controllers\IqbalPayController::class, 'deposit'])->name('iqbalpay.deposit');
     Route::post('/withdraw', [App\Http\Controllers\IqbalPayController::class, 'withdraw'])->name('iqbalpay.withdraw');
 });

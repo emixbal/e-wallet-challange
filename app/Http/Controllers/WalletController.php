@@ -33,9 +33,10 @@ class WalletController extends Controller
 
         $orderId = uniqid();
         $amount = $request->amount;
-        $timestamp = now();
+        $timestamp = now()->format('Y-m-d H:i:s.u'); // Correctly formatted timestamp
 
         DB::beginTransaction();
+
         try {
             // Save transaction
             $transaction = Transaction::create([
@@ -55,9 +56,11 @@ class WalletController extends Controller
 
             if ($response['status'] == 1) {
                 // Update wallet
-                $wallet = Wallet::firstOrCreate(['user_id' => $userId]);
-                $wallet->balance += $amount;
-                $wallet->save();
+                // $wallet = Wallet::firstOrCreate(['user_id' => $userId]);
+                // $wallet->balance += $amount;
+                // $wallet->save();
+
+                dispatch(new UpdateWalletJob($userId, $amount));
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -65,8 +68,11 @@ class WalletController extends Controller
         }
 
         DB::commit();
-        dispatch(new UpdateWalletJob($userId, $amount));
-        return response()->json($transaction);
+
+        return response()->json([
+            "message" => "ok",
+            "status" => 1,
+        ], 200);
     }
 
     public function withdraw(Request $request)

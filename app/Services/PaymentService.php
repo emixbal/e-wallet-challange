@@ -20,25 +20,6 @@ class PaymentService
 
     public function deposit($orderId, $amount, $timestamp)
     {
-        // Log::info('Attempting to deposit to external endpoint.', [
-        //     'order_id' => $orderId,
-        //     'amount' => $amount,
-        //     'timestamp' => $timestamp,
-        //     'url' => $this->url . '/deposit',
-        //     'token' => 'Bearer ' . base64_encode($this->token),
-        // ]);
-
-        // $response = $this->client->request('GET', 'http://localhost/dprd-payroll/api/json', [
-        //     // 'headers' => [
-        //     //     'Authorization' => 'Bearer ' . base64_encode($this->token),
-        //     //     'Content-Type' => 'application/json',
-        //     // ],
-        //     'json' => [
-        //         'name' => "iqbal",
-        //         'job' => "programmer",
-        //     ],
-        // ]);
-
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . base64_encode($this->token),
             'Content-Type' => 'application/json',
@@ -47,20 +28,6 @@ class PaymentService
             'amount' => $amount,
             'timestamp' => $timestamp,
         ]);
-
-        // $response = $this->client->request('POST', "localhost:8000/api/iqbalpay/deposit", [
-        //     'headers' => [
-        //         'Authorization' => 'Bearer ' . base64_encode($this->token),
-        //         'Content-Type' => 'application/json',
-        //     ],
-        //     'json' => [
-        //         'order_id' => $orderId,
-        //         'amount' => $amount,
-        //         'timestamp' => $timestamp,
-        //     ],
-        // ]);
-
-        // Log::info($response);
 
         $responseData = json_decode($response->getBody(), true);
 

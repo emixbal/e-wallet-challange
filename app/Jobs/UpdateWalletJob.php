@@ -26,9 +26,16 @@ class UpdateWalletJob implements ShouldQueue
     public function handle()
     {
         DB::transaction(function () {
-            $wallet = Wallet::where('user_id', $this->userId)->lockForUpdate()->first();
+            $wallet = Wallet::firstOrCreate(
+                ['user_id' => $this->userId],
+                ['balance' => 0]// initial balance if wallet is created
+            );
+
+            // Lock the wallet for update and update the balance
+            $wallet->lockForUpdate();
             $wallet->balance += $this->amount;
             $wallet->save();
         });
+
     }
 }

@@ -56,8 +56,8 @@ $(document).ready(function () {
                             <div class="list-group-item transaction">
                                 <div class="d-flex justify-content-between m-1">
                                     <div>
-                                        <strong>${transaction.title}</strong>
-                                        <div>${transaction.date}</div>
+                                        <strong>${transaction.order_id}</strong>
+                                        <div>${transaction.timestamp}</div>
                                     </div>
                                     <div class="${transaction.amount >= 0 ? 'text-success' : 'text-danger'}">${transaction.amount}</div>
                                 </div>
