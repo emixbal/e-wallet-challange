@@ -39,7 +39,12 @@ Oleh Muhammad Iqbal
     ```
     kunjungi `http://localhost:8000` 
 
-10. Untuk login gunakan user di UserSeeder
+10. Jalankan Job queue
+    ```
+    php artisan queue:work 
+    ```
+
+11. Untuk login gunakan user di UserSeeder
     email: user@email.com
     password: aaaaaaaa
 
