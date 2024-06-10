@@ -26,6 +26,9 @@
                     <a class="nav-link" href="#" data-toggle="modal" data-target="#topUpModal">Top Up</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#withdrawModal">Withdraw</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="javascript:void(0);" id="btn_logout">Logout</a>
                 </li>
             </ul>

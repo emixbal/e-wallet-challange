@@ -52,11 +52,8 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
+                'status'=>1,
             ]);
-
-            // Update transaction status
-            $transaction->status = 1; //top up
-            $transaction->save();
 
             // Update wallet
             dispatch(new UpdateWalletJob($userId, $amount));
@@ -121,11 +118,8 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
+                'status'=>2,
             ]);
-
-            // Update transaction status
-            $transaction->status = 2; //withdraw
-            $transaction->save();
 
             $wallet->balance -= $amount;
             $wallet->save();

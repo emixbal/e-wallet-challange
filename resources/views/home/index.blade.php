@@ -47,6 +47,7 @@
 
     @include('home.modal_topup')
     @include('home.modal_pay')
+    @include('home.modal_withdraw')
 
 @endsection
 
