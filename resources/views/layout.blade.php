@@ -26,7 +26,7 @@
                     <a class="nav-link" href="#" data-toggle="modal" data-target="#topUpModal">Top Up</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="btn_logout">Logout</a>
+                    <a class="nav-link" href="javascript:void(0);" id="btn_logout">Logout</a>
                 </li>
             </ul>
         </div>
@@ -38,7 +38,12 @@
 
 
     <script>
-        var base_app_url = "{{ url('') }}";
+        var base_app_url = "{{ url('') }}/api";
+        // Check if access token already exists
+        var accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            window.location.href = "{{ route('login') }}";
+        }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -49,13 +54,6 @@
 
     <script>
         $(document).ready(function() {
-            // Check if access token already exists
-            var accessToken = localStorage.getItem('access_token');
-            if (!accessToken) {
-                window.location.href = "{{ route('login') }}";
-                return;
-            }
-
             // Handle logout button click
             $("#btn_logout").on("click", function() {
                 // Remove the access token from local storage
