@@ -36,10 +36,134 @@ Oleh Muhammad Iqbal
     atau dengan
     ```
     php artisan serve
-    ``` 
+    ```
+    kunjungi `http://localhost:8000` 
+
+10. Untuk login gunakan user di UserSeeder
+    email: user@email.com
+    password: aaaaaaaa
 
 
-## Kontribusi
+**Route Documentation:**
 
-Jika Anda ingin berkontribusi pada proyek ini, silakan kirimkan pull request atau buka isu untuk diskusi lebih lanjut.
+This route group is protected by the 'if_auth' middleware, ensuring that only authenticated users can access its endpoints.
+
+- **POST /deposit**
+  - Endpoint: `/deposit`
+  - Controller Method: `deposit()` in `WalletController`
+  - Description: Allows authenticated users to deposit funds into their wallet.
+  - Parameters:
+    - `amount`: Required, numeric, minimum value of 1000.
+  - Response:
+    - Success:
+      ```json
+      {
+          "status": "ok",
+          "message": "ok"
+      }
+      ```
+    - Error:
+      ```json
+      {
+          "status": "nok",
+          "message": "something went wrong",
+          "error": { "validation_errors" }
+      }
+      ```
+
+- **POST /withdraw**
+  - Endpoint: `/withdraw`
+  - Controller Method: `withdraw()` in `WalletController`
+  - Description: Allows authenticated users to withdraw funds from their wallet.
+  - Parameters:
+    - `amount`: Required, numeric, minimum value of 10000.
+    - `account`: Required, numeric, minimum value of 0.
+    - `bank`: Required, string, must be one of: ABC, DEF, FGH.
+  - Response:
+    - Success:
+      ```json
+      {
+          "status": "ok",
+          "message": "success"
+      }
+      ```
+    - Error:
+      ```json
+      {
+          "status": "nok",
+          "message": "Something went wrong",
+          "error": { "validation_errors" }
+      }
+      ```
+
+- **POST /payment**
+  - Endpoint: `/payment`
+  - Controller Method: `payment()` in `WalletController`
+  - Description: Allows authenticated users to make payments from their wallet.
+  - Parameters:
+    - `amount`: Required, numeric, minimum value of 1000.
+  - Response:
+    - Success:
+      ```json
+      {
+          "status": "ok",
+          "message": "success"
+      }
+      ```
+    - Error:
+      ```json
+      {
+          "status": "nok",
+          "message": "Something went wrong",
+          "error": { "validation_errors" }
+      }
+      ```
+
+- **GET /wallet-detail**
+  - Endpoint: `/wallet-detail`
+  - Controller Method: `walletDetailByUser()` in `WalletController`
+  - Description: Retrieves the wallet details of the authenticated user.
+  - Response:
+    - Success:
+      ```json
+      {
+          "status": "ok",
+          "message": "ok",
+          "data": {
+              "user_id": "user_id",
+              "wallet": { "wallet_details" }
+          }
+      }
+      ```
+    - Error:
+      ```json
+      {
+          "status": "500",
+          "message": "Internal Server Error",
+          "error": "Internal server error"
+      }
+      ```
+
+- **GET /transactions**
+  - Endpoint: `/transactions`
+  - Controller Method: `listTransactions()` in `WalletController`
+  - Description: Retrieves the transaction history of the authenticated user.
+  - Response:
+    - Success:
+      ```json
+      {
+          "status": "ok",
+          "message": "success",
+          "data": [ { "transaction_objects" } ]
+      }
+      ```
+    - Error:
+      ```json
+      {
+          "status": "500",
+          "message": "Internal Server Error",
+          "error": "Internal server error"
+      }
+      ```
+
 
