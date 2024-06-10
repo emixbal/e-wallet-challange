@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\UpdateWalletJob;
+use App\Jobs\WithdrawJob;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Services\PaymentService;
@@ -52,7 +53,7 @@ class WalletController extends Controller
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
-                'status'=>1,
+                'status' => 1, // Mark as deposit transaction
             ]);
 
             // Update wallet
@@ -87,12 +88,11 @@ class WalletController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->messages(),
-                "message" => "something went wrong",
+                "message" => "Something went wrong",
                 "status" => "nok",
             ], 422);
         }
 
-        $orderId = uniqid();
         $amount = $request->amount;
         $bank = $request->bank;
         $account = $request->account;
@@ -100,35 +100,22 @@ class WalletController extends Controller
 
         DB::beginTransaction();
         try {
-            // Ensure the user has enough balance
-            $wallet = Wallet::where('user_id', $userId)->lockForUpdate()->first();
-            if ($wallet->balance < $amount) {
-                throw new \Exception('Insufficient balance');
-            }
+            // Dispatch WithdrawJob
+            dispatch(new WithdrawJob($userId, $amount));
 
-            // Call third-party service
-            $response = $this->paymentService->withdraw($orderId, $amount, $timestamp, $bank, $account);
-            if ($response['status'] != 1) {
-                throw new \InvalidArgumentException('Cant access payment service');
-            }
-
-            // Save transaction
+            // save transaction
             $transaction = Transaction::create([
-                'order_id' => $orderId,
+                'order_id' => uniqid(),
                 'amount' => $amount,
                 'timestamp' => $timestamp,
                 'user_id' => $userId,
-                'status'=>2,
+                'status' => 2, // Mark as withdrawal transaction
             ]);
-
-            $wallet->balance -= $amount;
-            $wallet->save();
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json((object) [
                 'error' => $e->getMessage(),
-                "message" => "something went wrong",
+                "message" => "Something went wrong",
                 "status" => "nok",
             ], 200);
         }
@@ -137,7 +124,7 @@ class WalletController extends Controller
         return response()->json((object) [
             "error" => null,
             "status" => "ok",
-            "message" => "success",
+            "message" => "Withdrawal request submitted",
         ]);
     }
 
@@ -147,7 +134,7 @@ class WalletController extends Controller
         // Fetch the associated wallet details from the database
         $wallet = Wallet::where('user_id', $userId)->first();
 
-        // If the user doesn't have a wallet record, create a new one with a balance of 0
+        // If user doesn't have a wallet record, create a new one
         if (!$wallet) {
             $wallet = new Wallet();
             $wallet->user_id = $userId;
