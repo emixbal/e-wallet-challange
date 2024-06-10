@@ -53,14 +53,33 @@ $(document).ready(function () {
                     // Iterate through data
                     response.data.forEach(function (transaction) {
                         var formattedDate = moment(transaction.timestamp).locale('id').format('DD MMMM YYYY');
+                        var transactionClass = transaction.status === 1 ? 'text-success' : 'text-danger';
+                        var statusDescription = '';
+
+                        // Add description based on status
+                        switch (transaction.status) {
+                            case 1:
+                                statusDescription = 'Deposit';
+                                break;
+                            case 2:
+                                statusDescription = 'Withdraw';
+                                break;
+                            case 3:
+                                statusDescription = 'Pembayaran';
+                                break;
+                            default:
+                                statusDescription = 'Unknown';
+                        }
+
                         var transactionHTML = `
                             <div class="list-group-item transaction">
                                 <div class="d-flex justify-content-between m-1">
                                     <div>
                                         <strong>${transaction.order_id}</strong>
                                         <div>${formattedDate}</div>
+                                        <small>${statusDescription}</small>
                                     </div>
-                                    <div class="${transaction.amount >= 0 ? 'text-success' : 'text-danger'}">${formatRupiah(transaction.amount)}</div>
+                                    <div class="${transactionClass}">${formatRupiah(transaction.amount)}</div>
                                 </div>
                             </div>
                         `;
@@ -76,6 +95,7 @@ $(document).ready(function () {
                 $('#transactions').html('<div class="text-center mt-5">Error occurred while fetching transactions</div>');
             }
         });
+
     }, 1000); // Delay 1000ms for Ajax request
 
 
@@ -103,7 +123,7 @@ $(document).ready(function () {
                 amount: topup_amount,
             },
             success: async function (response, textStatus, xhr) {
-                if(response.status == "nok"){
+                if (response.status == "nok") {
                     alert("Ulangi beberapa saat lagi")
                     $('#topUpModal').modal('hide');
                 }
