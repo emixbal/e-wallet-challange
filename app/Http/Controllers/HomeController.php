@@ -22,4 +22,20 @@ class HomeController extends Controller
 
         return view("home/index", $pass);
     }
+
+    public function transaction()
+    {
+        $data = (object) [
+        ];
+
+        $pass = [
+            "page" => [
+                "parent_title" => $this->parent_title,
+                "title" => "List Transactions",
+            ],
+            "data" => $data,
+        ];
+
+        return view("transaction/index", $pass);
+    }
 }
