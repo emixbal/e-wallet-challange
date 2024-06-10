@@ -28,16 +28,24 @@ class WalletController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 422);
+            return response()->json([
+                'error' => $validator->messages(),
+                "message" => "something went wrong",
+                "status" => "nok",
+            ], 422);
         }
 
         $orderId = uniqid();
         $amount = $request->amount;
-        $timestamp = now()->format('Y-m-d H:i:s.u'); // Correctly formatted timestamp
+        $timestamp = now()->format('Y-m-d H:i:s.u');
 
         DB::beginTransaction();
-
         try {
+            // Call third-party service
+            $response = $this->paymentService->deposit($orderId, $amount, $timestamp);
+            if ($response['status'] != 1) {
+                throw new \InvalidArgumentException('Cant access payment service');
+            }
             // Save transaction
             $transaction = Transaction::create([
                 'order_id' => $orderId,
@@ -47,32 +55,31 @@ class WalletController extends Controller
                 'status' => 0, // Pending
             ]);
 
-            // Call third-party service
-            $response = $this->paymentService->deposit($orderId, $amount, $timestamp);
-
             // Update transaction status
             $transaction->status = $response['status'];
             $transaction->save();
 
-            if ($response['status'] == 1) {
-                // Update wallet
-                // $wallet = Wallet::firstOrCreate(['user_id' => $userId]);
-                // $wallet->balance += $amount;
-                // $wallet->save();
-
-                dispatch(new UpdateWalletJob($userId, $amount));
-            }
+            // Update wallet
+            dispatch(new UpdateWalletJob($userId, $amount));
+            // $wallet = Wallet::firstOrCreate(['user_id' => $userId]);
+            // $wallet->balance += $amount;
+            // $wallet->save();
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json((object) [
+                'error' => $e->getMessage(),
+                "message" => "something went wrong",
+                "status" => "nok",
+                "response" => $response,
+            ], 200);
         }
 
         DB::commit();
-
-        return response()->json([
+        return response()->json((object) [
+            "error" => null,
             "message" => "ok",
-            "status" => 1,
-        ], 200);
+            "status" => "ok",
+        ]);
     }
 
     public function withdraw(Request $request)
@@ -84,13 +91,17 @@ class WalletController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 422);
+            return response()->json([
+                'error' => $validator->messages(),
+                "message" => "something went wrong",
+                "status" => "nok",
+            ], 422);
         }
 
         $orderId = uniqid();
         $amount = $request->input('amount');
         $bank = $request->input('bank');
-        $timestamp = now();
+        $timestamp = now()->format('Y-m-d H:i:s.u');
 
         DB::beginTransaction();
         try {
@@ -121,11 +132,19 @@ class WalletController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json((object) [
+                'error' => $e->getMessage(),
+                "message" => "something went wrong",
+                "status" => "nok",
+            ], 200);
         }
 
         DB::commit();
-        return response()->json($transaction);
+        return response()->json((object) [
+            "error" => null,
+            "status" => "ok",
+            "message" => "success",
+        ]);
     }
 
     public function walletDetailByUser(Request $request)
@@ -143,7 +162,7 @@ class WalletController extends Controller
 
         return response()->json([
             "status" => "ok",
-            "message" => "success",
+            "message" => "ok",
             "data" => (object) [
                 'user_id' => $userId,
                 'wallet' => $wallet,

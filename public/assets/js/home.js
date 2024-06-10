@@ -52,12 +52,13 @@ $(document).ready(function () {
                 } else {
                     // Iterate through data
                     response.data.forEach(function (transaction) {
+                        var formattedDate = moment(transaction.timestamp).locale('id').format('DD MMMM YYYY');
                         var transactionHTML = `
                             <div class="list-group-item transaction">
                                 <div class="d-flex justify-content-between m-1">
                                     <div>
                                         <strong>${transaction.order_id}</strong>
-                                        <div>${transaction.timestamp}</div>
+                                        <div>${formattedDate}</div>
                                     </div>
                                     <div class="${transaction.amount >= 0 ? 'text-success' : 'text-danger'}">${formatRupiah(transaction.amount)}</div>
                                 </div>
@@ -81,7 +82,7 @@ $(document).ready(function () {
     $("#btn_top_up").on("click", function () {
         var topup_amount = $("#topup_amount").val()
 
-        if (topup_amount=="") {
+        if (topup_amount == "") {
             alert("Amount required !")
             return
         }
@@ -102,21 +103,29 @@ $(document).ready(function () {
                 amount: topup_amount,
             },
             success: async function (response, textStatus, xhr) {
+                if(response.status == "nok"){
+                    alert("Ulangi beberapa saat lagi")
+                    $('#topUpModal').modal('hide');
+                }
                 location.reload();
+                return;
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (jqXHR.status === 422) {
                     var errorMessage = jqXHR.responseJSON?.message || "Validation error occurred.";
                     alert(errorMessage);
                     return
-                } else {
-                    console.log("An error occurred");
-                    console.log(jqXHR, textStatus, errorThrown);
-                    return;
                 }
+
+                console.log("An error occurred");
+                console.log(jqXHR, textStatus, errorThrown);
+                return;
+            },
+            finally: function () {
+                alert("Ulangi beberapa saat lagi");
+                return;
             }
         });
-
     })
 });
 

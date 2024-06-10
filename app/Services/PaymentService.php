@@ -23,7 +23,7 @@ class PaymentService
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . base64_encode($this->token),
             'Content-Type' => 'application/json',
-        ])->post("http://localhost/payment_app/api/iqbalpay" . '/deposit', [
+        ])->post($this->url . '/deposit', [
             'order_id' => $orderId,
             'amount' => $amount,
             'timestamp' => $timestamp,
@@ -49,14 +49,13 @@ class PaymentService
             'timestamp' => $timestamp,
         ];
 
-        $response = $this->client->post($this->url . '/withdraw', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . base64_encode($this->token),
-                'Content-Type' => 'application/json',
-            ],
-            'json' => $data,
-        ]);
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . base64_encode($this->token),
+            'Content-Type' => 'application/json',
+        ])->post($this->url . '/deposit', $data);
 
-        return json_decode($response->getBody(), true);
+        $responseData = json_decode($response->getBody(), true);
+
+        return $responseData;
     }
 }
