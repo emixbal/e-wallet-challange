@@ -37,7 +37,8 @@ Oleh Muhammad Iqbal
     ```
     php artisan serve
     ```
-    kunjungi `http://localhost:8000` 
+    kunjungi `http://localhost:8000` for user page
+    kunjungi `http://localhost:8000/transaction`  for admin page
 
 10. Jalankan Job queue
     ```
@@ -47,6 +48,8 @@ Oleh Muhammad Iqbal
 11. Untuk login gunakan user di UserSeeder
     email: user@email.com
     password: aaaaaaaa
+
+
 
 
 **Route Documentation:**
