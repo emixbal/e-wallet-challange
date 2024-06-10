@@ -59,7 +59,7 @@ $(document).ready(function () {
                                         <strong>${transaction.order_id}</strong>
                                         <div>${transaction.timestamp}</div>
                                     </div>
-                                    <div class="${transaction.amount >= 0 ? 'text-success' : 'text-danger'}">${transaction.amount}</div>
+                                    <div class="${transaction.amount >= 0 ? 'text-success' : 'text-danger'}">${formatRupiah(transaction.amount)}</div>
                                 </div>
                             </div>
                         `;
