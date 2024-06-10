@@ -89,9 +89,10 @@
                             localStorage.setItem('access_token', access_token);
                             // Redirect to home page
                             window.location.href = "{{ route('home') }}";
+                        } else {
+                            alert("Failed to retrieve access token.");
+                            return;
                         }
-                        alert("Failed to retrieve access token.");
-                        return;
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         if (jqXHR.status === 422) {
